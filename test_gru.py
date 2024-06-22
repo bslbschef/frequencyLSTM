@@ -8,7 +8,7 @@ from math import sqrt
 
 sys.stdout = Logger(filename=save_pth_path + 'test_default.log', stream=sys.stdout)
 loaded_model = WindSpeedGRU(input_dim=input_dim, hidden_dim=hidden_dim, output_dim=output_dim, num_layers=num_layers, flag_bidirectional=flag_bidirectional, time_flag=time_flag)
-loaded_model.load_state_dict(torch.load(save_pth_path + 'epoch_spectrum10000.pth')['model_state_dict'])
+loaded_model.load_state_dict(torch.load(save_pth_path + 'epoch_spectrum0140.pth')['model_state_dict'])
 loaded_model.eval()
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 loaded_model.to(device)

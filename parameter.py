@@ -4,9 +4,9 @@ import os
 import torch.nn as nn
 # 公共参数设置
 input_dim = 1  # 输入特征维度
-hidden_dim = 32  # LSTM隐藏层维度
+hidden_dim = 64  # LSTM隐藏层维度
 output_dim = 1  # 输出维度
-num_layers = 3  # LSTM层数
+num_layers = 2  # LSTM层数
 flag_bidirectional = True
 if flag_bidirectional:
     time_flag = 2
