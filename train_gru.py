@@ -33,7 +33,7 @@ if lastPatFile is not None:
     optimizer.load_state_dict(checkpoint['optimizer_state_dict'])
     start_epoch = checkpoint['epoch'] + 1  # 从上次训练的下一个epoch开始
     loss = checkpoint['loss']
-    learning_rate = 0.00001  # checkpoint['learning_rate']*1000 [4820kaishi]
+    learning_rate = 0.0001  # checkpoint['learning_rate']*1000 [4820kaishi]
     cost_time = checkpoint['cost_time']
     for param_group in optimizer.param_groups:
         param_group['lr'] = learning_rate
@@ -59,20 +59,13 @@ for epoch in range(start_epoch, num_epochs+1):
     r2, rmse = [], []
     for i in range(len(train_csv_files)):
         cur_train_data = train_data[i]
-        inputs, targets = cur_train_data[:, :12, :], cur_train_data[:, 12:, :]
+        inputs, targets = cur_train_data[:, 0, :], cur_train_data[:, 1, :]
 
-        # [bitch, 201, 12], [bitch, 3]
-        temporary_inputs, temporary_targets = vector_transfer_targetFinal_noBatch2(window_size, inputs, targets)
         optimizer.zero_grad()
-        new_inputs = temporary_inputs
-        new_targets = temporary_targets[:, 0:1]
-        # new_targets = temporary_targets
+        new_inputs = inputs
+        new_targets = targets
         outputs = model(new_inputs)
-        outputs = outputs.squeeze(0)
-        loss1 = criterion1(outputs[:, 0], new_targets[:, 0]) * weight1
-        # loss2 = criterion2(outputs[:, 1], new_targets[:, 1]) * weight2
-        # loss3 = criterion3(outputs[:, 2], new_targets[:, 2]) * weight3
-        loss = loss1  # + loss2 + loss3
+        loss = criterion(outputs, new_targets)
         loss.backward()
         clip_value = 1.0
         for param in model.parameters():
@@ -106,7 +99,7 @@ for epoch in range(start_epoch, num_epochs+1):
             'loss': loss,
             'learning_rate': optimizer.param_groups[0]['lr'],
             'cost_time': datetime.now() - begin_time + cost_time,
-        }, save_pth_path + 'epoch_u_' + str(epoch).zfill(4) + '.pth')
+        }, save_pth_path + 'epoch_spectrum' + str(epoch).zfill(4) + '.pth')
 
 # 绘制Loss变化曲线
 fig, ax = plt.subplots()
