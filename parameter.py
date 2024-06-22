@@ -3,6 +3,8 @@ import os
 
 import torch.nn as nn
 # 公共参数设置
+from loss.stdLoss import StdDevLoss
+
 input_dim = 1  # 输入特征维度
 hidden_dim = 64  # LSTM隐藏层维度
 output_dim = 1  # 输出维度
@@ -16,7 +18,8 @@ else:
 learning_rate = 0.001  # 学习率
 lr_update_coefficient = 0.1  # 学习率更新的缩小系数
 lr_update_patient = 20  # 学习率更触发更新的容忍度
-criterion = nn.MSELoss()  # 使用均方误差Loss or 使用L1Loss
+# criterion = nn.L1Loss()  # 使用均方误差MSELoss or 使用L1Loss
+criterion = StdDevLoss(alpha=0.1)
 
 
 num_epochs = 10000  # 训练轮次
